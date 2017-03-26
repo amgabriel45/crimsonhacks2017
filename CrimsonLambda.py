@@ -1,6 +1,7 @@
 from __future__ import print_function
 #from boto3.dynamodb.conditions import Key, Attr
 import boto3
+from boto3.dynamodb.conditions import Key, Attr
 
 # --------------- Helpers that build all of the responses ----------------------
 
@@ -60,7 +61,7 @@ def test_intent_stuff(intent, session):
 	print('Entered the test intent')
 	
 	#"dynamodb.us-east-1.amazonaws.com"
-	client = boto3.resource('dynamodb', region_name='us-east-1', endpoint_url='dynamodb.us-east-1.496734855354:table/8451_Transactions.amazonaws.com')
+	dynamodb = boto3.resource('dynamodb', region_name='us-east-1', endpoint_url='https://dynamodb.us-east-1.amazonaws.com')
 	print('set up the connection')
 	#conn = boto.connect_dynamodb(aws_access_key_id='...',aws_secret_access_key='...')
 	# Wait until the table exists.
@@ -74,9 +75,12 @@ def test_intent_stuff(intent, session):
 	print('Got to the table')
 	#dynamodb = boto3.resource('dynamodb')
 	#table = dynamodb.Table('users')
-	
-	
-	speech_output = "The number of items in this table is " + resource.describe_table('8451_Transactions')
+	#response = table.query(KeyConditionExpression=Key('upc').eq(2700042273))
+	#print(response)
+	#table.creation_date_time
+	t = table.creation_date_time
+	t = t.strftime('%m/%d/%Y')
+	speech_output = "The table name is  " + table.table_name + " / / and the number of items in the table is" + str(table.item_count) + " / / The date the table was created was " + t
 	print('Set up the speech output')
 	reprompt_text = None
 	should_end_session = True
